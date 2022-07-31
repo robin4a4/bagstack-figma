@@ -6,7 +6,7 @@ export function notify(
 ) {
   return figma.notify(
     `${PluginExceptionMessage[pluginException]} ${
-      optionalMessage && `: ${optionalMessage}`
+      optionalMessage && ` ${optionalMessage}`
     }`
   );
 }

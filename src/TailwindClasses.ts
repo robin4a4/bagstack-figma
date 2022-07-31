@@ -133,12 +133,48 @@ export default class TailwindClasses extends TailwindClassesBase {
 
   borderRadius() {
     const cornerRadius = this.node.cornerRadius;
-    console.log(cornerRadius);
-    if (cornerRadius === 4) return "rounded";
-    if (cornerRadius === 8) return "rounded-md";
+    if (typeof cornerRadius == "number") {
+      if (cornerRadius === 4) return "rounded";
+      if (cornerRadius === 8) return "rounded-md";
+      if (cornerRadius > 100) return "rounded-full";
+    } else {
+      const topLeftRadius = this.node.topLeftRadius;
+      const topRightRadius = this.node.topRightRadius;
+      const bottomLeftRadius = this.node.bottomLeftRadius;
+      const bottomRightRadius = this.node.bottomRightRadius;
+      const cornerRadiusArray = [];
+      if (topLeftRadius === topRightRadius) {
+        if (topRightRadius === 4) cornerRadiusArray.push("rounded-t");
+        if (topRightRadius === 8) cornerRadiusArray.push("rounded-t-md");
+        if (topRightRadius > 100) cornerRadiusArray.push("rounded-t-full");
+      } else {
+        if (topRightRadius === 4) cornerRadiusArray.push("rounded-tr");
+        if (topRightRadius === 8) cornerRadiusArray.push("rounded-tr-md");
+        if (topLeftRadius === 4) cornerRadiusArray.push("rounded-tl");
+        if (topLeftRadius === 8) cornerRadiusArray.push("rounded-tl-md");
+        if (topLeftRadius > 100) cornerRadiusArray.push("rounded-tl-full");
+      }
+      if (bottomLeftRadius === bottomRightRadius) {
+        if (bottomRightRadius === 4) cornerRadiusArray.push("rounded-b");
+        if (bottomRightRadius === 8) cornerRadiusArray.push("rounded-b-md");
+        if (bottomRightRadius > 100) cornerRadiusArray.push("rounded-b-full");
+      } else {
+        if (bottomRightRadius === 4) cornerRadiusArray.push("rounded-br");
+        if (bottomRightRadius === 8) cornerRadiusArray.push("rounded-br-md");
+        if (bottomLeftRadius === 4) cornerRadiusArray.push("rounded-bl");
+        if (bottomLeftRadius === 8) cornerRadiusArray.push("rounded-bl-md");
+        if (bottomLeftRadius > 100) cornerRadiusArray.push("rounded-bl-full");
+      }
+      return cornerRadiusArray;
+    }
   }
 
   generateClass() {
-    return [this.display(), this.gap(), this.padding()].join(" ");
+    return [
+      this.display(),
+      this.gap(),
+      this.padding(),
+      this.borderRadius(),
+    ].join(" ");
   }
 }

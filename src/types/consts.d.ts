@@ -5,5 +5,6 @@ export declare enum PluginException {
 }
 export declare const PluginExceptionMessage: {
     0: string;
+    1: string;
     2: string;
 };

@@ -1,0 +1,8 @@
+<h2>Components extractor</h2>
+<button id="extract">Extract</button>
+<script>
+
+document.getElementById('extract').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'extract-components' } }, '*')
+}
+</script>

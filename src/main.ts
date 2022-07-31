@@ -1,5 +1,6 @@
 import { PluginException } from "./consts";
-import notify from "./notify";
+import { notify } from "./helpers";
+import TailwindClasses from "./TailwindClasses";
 
 figma.showUI(__html__);
 
@@ -10,24 +11,27 @@ figma.ui.onmessage = (msg) => {
     const componentsPages = figma.root.children.filter(
       (page) => page.name == "components"
     );
-    let componentsPage: PageNode;
+    let componentsPage: PageNode | null = null;
+    console.log(componentsPages.length);
     switch (componentsPages.length) {
       case 0:
         notify(PluginException.NoComponentPage);
         break;
       case 1:
         componentsPage = componentsPages[0];
+        break;
       default:
         notify(PluginException.TooManyComponentPage);
     }
 
-    function traverse(node) {
+    function traverse(node: PageNode) {
       node
         .findAllWithCriteria({
-          types: ["COMPONENT_SET"],
+          types: ["COMPONENT"],
         })
         .forEach((el) => {
-          console.log(el.name, el.children);
+          const tw = new TailwindClasses(el);
+          console.log(tw.generateClass());
         });
     }
     if (componentsPage) {

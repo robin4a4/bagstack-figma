@@ -2,7 +2,7 @@
   "name": "bagstack",
   "id": "1134218619836537485",
   "api": "1.0.0",
-  "main": "code.js",
+  "main": "dist/main.js",
   "editorType": [
     "figma"
   ],

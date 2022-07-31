@@ -1,10 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": ["es6"],
+    "emitDeclarationOnly": true,
+    "declaration": true,    
+    "target": "ES2016",
+    "lib": ["ES2016"],
+    "declarationDir": "./src/types",
     "typeRoots": [
       "./node_modules/@types",
-      "./node_modules/@figma"
+      "./node_modules/@figma",
     ]
-  }
+  },
+  "include": ["src"]
 }

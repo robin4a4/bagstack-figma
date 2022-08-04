@@ -1,6 +1,6 @@
 import { PluginException } from "./consts";
 import { notify } from "./helpers";
-import TailwindClasses from "./TailwindClasses";
+import HtmlElement from "./HtmlElement";
 
 figma.showUI(__html__);
 
@@ -12,7 +12,6 @@ figma.ui.onmessage = (msg) => {
       (page) => page.name == "components"
     );
     let componentsPage: PageNode | null = null;
-    console.log(componentsPages.length);
     switch (componentsPages.length) {
       case 0:
         notify(PluginException.NoComponentPage);
@@ -30,8 +29,8 @@ figma.ui.onmessage = (msg) => {
           types: ["COMPONENT"],
         })
         .forEach((el) => {
-          const tw = new TailwindClasses(el);
-          console.log(tw.generateClass());
+          const html = new HtmlElement(el);
+          console.log(html.generateElement());
         });
     }
     if (componentsPage) {

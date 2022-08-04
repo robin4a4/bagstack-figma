@@ -41,6 +41,12 @@ class TailwindClassesBase {
   isAutoLayout() {
     return this.node.layoutMode !== "NONE";
   }
+
+  color(styleId: string) {
+    console.log(styleId);
+    const paintStyle = figma.getStyleById(styleId);
+    return paintStyle.name.replace("/", "-");
+  }
 }
 
 export default class TailwindClasses extends TailwindClassesBase {
@@ -165,8 +171,51 @@ export default class TailwindClasses extends TailwindClassesBase {
         if (bottomLeftRadius === 8) cornerRadiusArray.push("rounded-bl-md");
         if (bottomLeftRadius > 100) cornerRadiusArray.push("rounded-bl-full");
       }
-      return cornerRadiusArray;
+      return cornerRadiusArray.join(" ");
     }
+  }
+
+  background() {
+    if (typeof this.node.fillStyleId === "string") {
+      return `bg-${this.color(this.node.fillStyleId)}`;
+    }
+  }
+
+  border() {
+    const strokeWeight = this.node.strokeWeight;
+    const borderTop = this.node.strokeTopWeight;
+    const borderBottom = this.node.strokeBottomWeight;
+    const borderLeft = this.node.strokeLeftWeight;
+    const borderRight = this.node.strokeRightWeight;
+    const hasCustomBorder = borderTop | borderBottom | borderLeft | borderRight;
+    if (strokeWeight && !hasCustomBorder) {
+      return `border-${strokeWeight}`;
+    } else {
+      const borderArray = [];
+      if (borderTop) {
+        if (borderTop === borderBottom) {
+          borderArray.push(`border-y-${borderTop}`);
+        } else {
+          borderArray.push(`border-t-${borderTop}`);
+        }
+      } else if (borderBottom) {
+        borderArray.push(`border-b-${borderBottom}`);
+      }
+      if (borderLeft) {
+        if (borderLeft === borderRight) {
+          borderArray.push(`border-x-${borderLeft}`);
+        } else {
+          borderArray.push(`border-l-${borderLeft}`);
+        }
+      } else if (borderRight) {
+        borderArray.push(`border-r-${borderRight}`);
+      }
+      return borderArray.join(" ");
+    }
+  }
+
+  borderColor() {
+    return `border-${this.color(this.node.strokeStyleId)}`;
   }
 
   generateClass() {
@@ -175,6 +224,9 @@ export default class TailwindClasses extends TailwindClassesBase {
       this.gap(),
       this.padding(),
       this.borderRadius(),
+      this.background(),
+      this.border(),
+      this.borderColor(),
     ].join(" ");
   }
 }

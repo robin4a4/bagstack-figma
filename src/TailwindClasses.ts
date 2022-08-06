@@ -3,11 +3,13 @@ import { notify } from "./helpers";
 
 type TailwindSizesObj = { [x in number]: string };
 
+export type AcceptedNodes = ComponentNode | FrameNode | InstanceNode;
+
 class TailwindClassesBase {
-  node: ComponentNode;
+  node: AcceptedNodes;
   tailwindSizes: TailwindSizesObj;
 
-  constructor(componentNode: ComponentNode) {
+  constructor(componentNode: AcceptedNodes) {
     this.node = componentNode;
     this.tailwindSizes = {
       0: "0px",
@@ -35,6 +37,7 @@ class TailwindClassesBase {
   }
 
   isInTailwindSizes(propertyValue: number) {
+    if (!propertyValue) return false;
     return Object.keys(this.tailwindSizes).includes(propertyValue.toString());
   }
 
@@ -43,7 +46,6 @@ class TailwindClassesBase {
   }
 
   color(styleId: string) {
-    console.log(styleId);
     const paintStyle = figma.getStyleById(styleId);
     return paintStyle.name.replace("/", "-");
   }
@@ -215,10 +217,14 @@ export default class TailwindClasses extends TailwindClassesBase {
   }
 
   borderColor() {
+    if (!this.node.strokeStyleId) return;
     return `border-${this.color(this.node.strokeStyleId)}`;
   }
 
   generateClass() {
+    if (this.node.constructor.name === "TextNode") {
+      return [this.border(), this.borderColor()].join(" ");
+    }
     return [
       this.display(),
       this.gap(),

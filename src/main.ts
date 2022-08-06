@@ -1,6 +1,7 @@
 import { PluginException } from "./consts";
 import { notify } from "./helpers";
 import HtmlElement from "./HtmlElement";
+import { AcceptedNodes } from "./TailwindClasses";
 
 figma.showUI(__html__);
 
@@ -29,8 +30,8 @@ figma.ui.onmessage = (msg) => {
           types: ["COMPONENT"],
         })
         .forEach((el) => {
-          const html = new HtmlElement(el);
-          console.log(html.generateElement());
+          const test = treeBrowsing(el);
+          console.log(test);
         });
     }
     if (componentsPage) {
@@ -40,3 +41,16 @@ figma.ui.onmessage = (msg) => {
 
   figma.closePlugin();
 };
+
+function treeBrowsing(node: AcceptedNodes): string {
+  const html = new HtmlElement(node).generateElement();
+  if (node.children && node.children.length > 0) {
+    let result = "";
+    node.children.forEach((element) => {
+      result += treeBrowsing(element);
+    });
+    return html.replace("$children", result);
+  } else {
+    return html.replace("$children", "djhsfgsjdhfgsdjfhgj");
+  }
+}

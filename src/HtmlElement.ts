@@ -1,14 +1,16 @@
 import { Element, PluginException } from "./consts";
 import { notify } from "./helpers";
-import TailwindClasses from "./TailwindClasses";
+import TailwindClasses, { AcceptedNodes } from "./TailwindClasses";
 
 export default class HtmlElement {
-  node: ComponentNode;
+  node: AcceptedNodes;
   classes: string;
+  classAttr: string;
 
-  constructor(componentNode: ComponentNode) {
+  constructor(componentNode: AcceptedNodes) {
     this.node = componentNode;
     this.classes = new TailwindClasses(this.node).generateClass();
+    this.classAttr = this.classes !== "" ? ` class="${this.classes}"` : "";
   }
 
   nameArray() {
@@ -30,42 +32,37 @@ export default class HtmlElement {
 
   button() {
     return `
-    <button type="button" class="${this.classes}">
-        test
-    </button>
-    `;
+    <button type="button"${this.classAttr}>
+        $children
+    </button>`;
   }
 
   form() {
     return `
-    <form action="" method="POST" class="${this.classes}">
-        test
-    </form>
-    `;
+    <form action="" method="POST"${this.classAttr}>
+        $children
+    </form>`;
   }
 
   div() {
     return `
-    <div class="${this.classes}">
-        test
-    </div>
-    `;
+    <div${this.classAttr}>
+        $children
+    </div>`;
   }
 
   span() {
     return `
-    <span class="${this.classes}">
-        test
-    </span>
-    `;
+    <span"${this.classAttr}>
+        $children
+    </span>`;
   }
 
   p() {
     return `
-    <p class="${this.classes}">
-        test
-    </p>
-    `;
+    <p${this.classAttr}>
+        $children
+    </p>`;
   }
 
   generateElement() {

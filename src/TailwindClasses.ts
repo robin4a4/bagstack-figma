@@ -3,7 +3,7 @@ import { notify } from "./helpers";
 
 type TailwindSizesObj = { [x in number]: string };
 
-export type AcceptedNodes = ComponentNode | FrameNode | InstanceNode;
+export type AcceptedNodes = ComponentNode | FrameNode | InstanceNode | TextNode;
 
 class TailwindClassesBase {
   node: AcceptedNodes;
@@ -184,12 +184,15 @@ export default class TailwindClasses extends TailwindClassesBase {
   }
 
   border() {
+    if (!this.node.strokeStyleId) return;
     const strokeWeight = this.node.strokeWeight;
     const borderTop = this.node.strokeTopWeight;
     const borderBottom = this.node.strokeBottomWeight;
     const borderLeft = this.node.strokeLeftWeight;
     const borderRight = this.node.strokeRightWeight;
-    const hasCustomBorder = borderTop | borderBottom | borderLeft | borderRight;
+    const hasCustomBorder =
+      strokeWeight | borderTop | borderBottom | borderLeft | borderRight;
+
     if (strokeWeight && !hasCustomBorder) {
       return `border-${strokeWeight}`;
     } else {
@@ -221,9 +224,57 @@ export default class TailwindClasses extends TailwindClassesBase {
     return `border-${this.color(this.node.strokeStyleId)}`;
   }
 
+  fontSize() {
+    if (this.node.type === "TEXT" && typeof this.node.fontSize === "number") {
+      return `font-${this.node.fontSize}`;
+    }
+  }
+
+  textCase() {
+    if (this.node.type === "TEXT") {
+      const mapTextCase = {
+        ORIGINAL: "normal-case",
+        UPPER: "uppercase",
+        LOWER: "lowercase",
+        TITLE: "capitalize",
+      };
+      return mapTextCase[this.node.textCase];
+    }
+  }
+
+  textDecoration() {
+    if (this.node.type === "TEXT") {
+      const mapTextDecoration = {
+        NONE: "",
+        UNDERLINE: "underline",
+        STRIKETHROUGH: "line-through",
+      };
+      return mapTextDecoration[this.node.textDecoration];
+    }
+  }
+
+  fontWeight() {
+    if (this.node.type === "TEXT" && typeof this.node.fontWeight === "number") {
+      const mapWeightToString = {
+        100: "thin",
+        200: "extralight",
+        300: "light",
+        400: "normal",
+        500: "medium",
+        600: "semibold",
+        700: "bold",
+        800: "extrabold",
+        900: "black",
+      };
+      return `font-${mapWeightToString[this.node.fontWeight]}`;
+    }
+  }
+
   generateClass() {
     if (this.node.constructor.name === "TextNode") {
-      return [this.border(), this.borderColor()].join(" ");
+      return [this.fontSize(), this.fontWeight(), this.textDecoration(), this.textCase()]
+        .filter((item) => item)
+        .join(" ");
     }
     return [
       this.display(),
@@ -233,6 +284,8 @@ export default class TailwindClasses extends TailwindClassesBase {
       this.background(),
       this.border(),
       this.borderColor(),
-    ].join(" ");
+    ]
+      .filter((item) => item)
+      .join(" ");
   }
 }

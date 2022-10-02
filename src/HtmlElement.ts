@@ -8,9 +8,10 @@ export default class HtmlElement {
   classAttr: string;
 
   constructor(componentNode: AcceptedNodes) {
-    this.node = componentNode;
+    this.node = componentNode; 
     this.classes = new TailwindClasses(this.node).generateClass();
-    this.classAttr = this.classes !== "" ? ` class="${this.classes}"` : "";
+    console.log(this.classes)
+    this.classAttr = this.classes !== " " ? ` class="${this.classes}"` : "";
   }
 
   nameArray() {
@@ -31,38 +32,23 @@ export default class HtmlElement {
   }
 
   button() {
-    return `
-    <button type="button"${this.classAttr}>
-        $children
-    </button>`;
+    return `<button type="button"${this.classAttr}>$children</button>`;
   }
 
   form() {
-    return `
-    <form action="" method="POST"${this.classAttr}>
-        $children
-    </form>`;
+    return `<form action="" method="POST"${this.classAttr}>$children</form>`;
   }
 
   div() {
-    return `
-    <div${this.classAttr}>
-        $children
-    </div>`;
+    return `<div${this.classAttr}>$children</div>`;
   }
 
   span() {
-    return `
-    <span"${this.classAttr}>
-        $children
-    </span>`;
+    return `<span${this.classAttr}>$children</span>`;
   }
 
   p() {
-    return `
-    <p${this.classAttr}>
-        $children
-    </p>`;
+    return `<p${this.classAttr}>$children</p>`;
   }
 
   generateElement() {

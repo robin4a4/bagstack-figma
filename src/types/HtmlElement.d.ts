@@ -1,9 +1,10 @@
+/// <reference types="plugin-typings" />
 import { AcceptedNodes } from "./TailwindClasses";
 export default class HtmlElement {
-    node: AcceptedNodes;
+    node: AcceptedNodes | TextNode;
     classes: string;
     classAttr: string;
-    constructor(componentNode: AcceptedNodes);
+    constructor(componentNode: AcceptedNodes | TextNode);
     nameArray(): string[];
     elementName(): string;
     componentName(): string;

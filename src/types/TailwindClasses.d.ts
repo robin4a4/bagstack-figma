@@ -4,14 +4,15 @@ declare type TailwindSizesObj = {
 };
 export declare type AcceptedNodes = ComponentNode | FrameNode | InstanceNode;
 declare class TailwindClassesBase {
-    node: AcceptedNodes;
+    node: AcceptedNodes | TextNode;
     tailwindSizes: TailwindSizesObj;
-    constructor(componentNode: AcceptedNodes);
+    constructor(componentNode: AcceptedNodes | TextNode);
     isInTailwindSizes(propertyValue: number): boolean;
-    isAutoLayout(): boolean;
     color(styleId: string): string;
 }
-export default class TailwindClasses extends TailwindClassesBase {
+export declare class TailwindClasses extends TailwindClassesBase {
+    node: AcceptedNodes;
+    isAutoLayout(): boolean;
     padding(): string;
     display(): string;
     gap(): string;
@@ -19,6 +20,14 @@ export default class TailwindClasses extends TailwindClassesBase {
     background(): string;
     border(): string;
     borderColor(): string;
+    generateClass(): string;
+}
+export declare class TailwindFontClasses extends TailwindClassesBase {
+    node: TextNode;
+    fontSize(): string;
+    textCase(): any;
+    textDecoration(): any;
+    fontWeight(): void;
     generateClass(): string;
 }
 export {};

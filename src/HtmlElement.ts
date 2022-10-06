@@ -1,16 +1,16 @@
 import { Element, PluginException } from "./consts";
 import { notify } from "./helpers";
-import TailwindClasses, { AcceptedNodes } from "./TailwindClasses";
+import { AcceptedNodes, TailwindClasses, TailwindFontClasses } from "./TailwindClasses";
 
 export default class HtmlElement {
-  node: AcceptedNodes;
+  node: AcceptedNodes | TextNode;
   classes: string;
   classAttr: string;
 
-  constructor(componentNode: AcceptedNodes) {
+  constructor(componentNode: AcceptedNodes | TextNode) {
     this.node = componentNode; 
-    this.classes = new TailwindClasses(this.node).generateClass();
-    console.log(this.classes)
+    this.classes = this.node.type === "TEXT" ? new TailwindFontClasses(this.node).generateClass() : new TailwindClasses(this.node).generateClass();
+
     this.classAttr = this.classes !== " " ? ` class="${this.classes}"` : "";
   }
 

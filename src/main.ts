@@ -2,11 +2,9 @@ import { PluginException } from "./consts";
 import { notify } from "./helpers";
 import HtmlElement from "./HtmlElement";
 
-figma.showUI(__html__);
+figma.showUI(__html__, { themeColors: true, width: 700, height: 900 });
 
 figma.ui.onmessage = (msg) => {
-  // One way of distinguishing between different types of messages sent from
-  // your HTML page is to use an object with a "type" property like this.
   if (msg.type === "extract-components") {
     const componentsPages = figma.root.children.filter(
       (page) => page.name == "components"
@@ -29,16 +27,14 @@ figma.ui.onmessage = (msg) => {
           types: ["COMPONENT"],
         })
         .forEach((el) => {
-          const test = treeBrowsing(el);
-          console.log(test);
+          const result = treeBrowsing(el);
+          figma.ui.postMessage({ result, name: el.name });
         });
     }
     if (componentsPage) {
       traverse(componentsPage);
     }
   }
-
-  figma.closePlugin();
 };
 
 function treeBrowsing(node): string {
@@ -50,7 +46,7 @@ function treeBrowsing(node): string {
     });
     return html.replace("$children", result);
   } else {
-    if (node.characters) {      
+    if (node.characters) {
       return html.replace("$children", node.characters);
     }
     return html.replace("$children", "");

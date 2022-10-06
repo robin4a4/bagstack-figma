@@ -3,13 +3,13 @@ import { notify } from "./helpers";
 
 type TailwindSizesObj = { [x in number]: string };
 
-export type AcceptedNodes = ComponentNode | FrameNode | InstanceNode | TextNode;
+export type AcceptedNodes = ComponentNode | FrameNode | InstanceNode;
 
 class TailwindClassesBase {
-  node: AcceptedNodes;
+  node: AcceptedNodes | TextNode;
   tailwindSizes: TailwindSizesObj;
 
-  constructor(componentNode: AcceptedNodes) {
+  constructor(componentNode: AcceptedNodes | TextNode) {
     this.node = componentNode;
     this.tailwindSizes = {
       0: "0px",
@@ -41,17 +41,19 @@ class TailwindClassesBase {
     return Object.keys(this.tailwindSizes).includes(propertyValue.toString());
   }
 
-  isAutoLayout() {
-    return this.node.layoutMode !== "NONE";
-  }
-
   color(styleId: string) {
     const paintStyle = figma.getStyleById(styleId);
     return paintStyle.name.replace("/", "-");
   }
 }
 
-export default class TailwindClasses extends TailwindClassesBase {
+export class TailwindClasses extends TailwindClassesBase {
+  node: AcceptedNodes;
+
+  isAutoLayout() {
+    return this.node.layoutMode !== "NONE";
+  }
+
   padding() {
     if (!this.isAutoLayout()) return; // if no autolayout there is no padding
 
@@ -224,6 +226,24 @@ export default class TailwindClasses extends TailwindClassesBase {
     return `border-${this.color(this.node.strokeStyleId)}`;
   }
 
+  generateClass() {
+    return [
+      this.display(),
+      this.gap(),
+      this.padding(),
+      this.borderRadius(),
+      this.background(),
+      this.border(),
+      this.borderColor(),
+    ]
+      .filter((item) => item)
+      .join(" ");
+  }
+}
+
+export class TailwindFontClasses extends TailwindClassesBase {
+  node: TextNode;
+
   fontSize() {
     if (this.node.type === "TEXT" && typeof this.node.fontSize === "number") {
       return `font-${this.node.fontSize}`;
@@ -254,6 +274,7 @@ export default class TailwindClasses extends TailwindClassesBase {
   }
 
   fontWeight() {
+    // @ts-ignore
     if (this.node.type === "TEXT" && typeof this.node.fontWeight === "number") {
       const mapWeightToString = {
         100: "thin",
@@ -266,24 +287,17 @@ export default class TailwindClasses extends TailwindClassesBase {
         800: "extrabold",
         900: "black",
       };
+      // @ts-ignore
       return `font-${mapWeightToString[this.node.fontWeight]}`;
     }
   }
 
   generateClass() {
-    if (this.node.constructor.name === "TextNode") {
-      return [this.fontSize(), this.fontWeight(), this.textDecoration(), this.textCase()]
-        .filter((item) => item)
-        .join(" ");
-    }
     return [
-      this.display(),
-      this.gap(),
-      this.padding(),
-      this.borderRadius(),
-      this.background(),
-      this.border(),
-      this.borderColor(),
+      this.fontSize(),
+      this.fontWeight(),
+      this.textDecoration(),
+      this.textCase(),
     ]
       .filter((item) => item)
       .join(" ");

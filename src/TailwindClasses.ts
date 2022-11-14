@@ -43,7 +43,7 @@ class TailwindClassesBase {
 
   color(styleId: string) {
     const paintStyle = figma.getStyleById(styleId);
-    return paintStyle.name.replace("/", "-");
+    return paintStyle?.name.replace("/", "-");
   }
 }
 
@@ -180,7 +180,10 @@ export class TailwindClasses extends TailwindClassesBase {
   }
 
   background() {
-    if (typeof this.node.fillStyleId === "string") {
+    if (
+      typeof this.node.fillStyleId === "string" &&
+      this.node.fillStyleId !== ""
+    ) {
       return `bg-${this.color(this.node.fillStyleId)}`;
     }
   }
@@ -222,7 +225,11 @@ export class TailwindClasses extends TailwindClassesBase {
   }
 
   borderColor() {
-    if (!this.node.strokeStyleId) return;
+    if (
+      typeof this.node.fillStyleId === "string" &&
+      this.node.fillStyleId !== ""
+    )
+      return;
     return `border-${this.color(this.node.strokeStyleId)}`;
   }
 

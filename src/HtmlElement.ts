@@ -1,6 +1,10 @@
 import { Element, PluginException } from "./consts";
 import { notify } from "./helpers";
-import { AcceptedNodes, TailwindClasses, TailwindFontClasses } from "./TailwindClasses";
+import {
+  AcceptedNodes,
+  TailwindClasses,
+  TailwindFontClasses,
+} from "./TailwindClasses";
 
 export default class HtmlElement {
   node: AcceptedNodes | TextNode;
@@ -8,15 +12,18 @@ export default class HtmlElement {
   classAttr: string;
 
   constructor(componentNode: AcceptedNodes | TextNode) {
-    this.node = componentNode; 
-    this.classes = this.node.type === "TEXT" ? new TailwindFontClasses(this.node).generateClass() : new TailwindClasses(this.node).generateClass();
+    this.node = componentNode;
+    this.classes =
+      this.node.type === "TEXT"
+        ? new TailwindFontClasses(this.node).generateClass()
+        : new TailwindClasses(this.node).generateClass();
 
     this.classAttr = this.classes !== " " ? ` class="${this.classes}"` : "";
   }
 
   nameArray() {
     const nameArray = this.node.name.split("/");
-    if (nameArray.length != 2) {
+    if (nameArray.length < 2) {
       notify(PluginException.wrongElementName);
       return;
     }
@@ -51,6 +58,10 @@ export default class HtmlElement {
     return `<p${this.classAttr}>$children</p>`;
   }
 
+  svg() {
+    return null;
+  }
+
   generateElement() {
     return {
       [Element.Button]: this.button(),
@@ -58,6 +69,7 @@ export default class HtmlElement {
       [Element.Div]: this.div(),
       [Element.Span]: this.span(),
       [Element.P]: this.p(),
+      [Element.Svg]: this.svg(),
     }[this.elementName()];
   }
 }

@@ -27,7 +27,7 @@ export declare class TailwindFontClasses extends TailwindClassesBase {
     fontSize(): string;
     textCase(): any;
     textDecoration(): any;
-    fontWeight(): void;
+    fontWeight(): string;
     generateClass(): string;
 }
 export {};

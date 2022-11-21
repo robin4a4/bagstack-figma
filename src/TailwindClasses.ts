@@ -295,6 +295,11 @@ export class TailwindFontClasses extends TailwindClassesBase {
     }
   }
 
+  textColor() {
+    if (typeof this.node.fillStyleId !== "string") return;
+    return `text-${this.color(this.node.fillStyleId)}`;
+  }
+
   fontWeight() {
     // @ts-ignore
     if (this.node.type === "TEXT" && typeof this.node.fontWeight === "number") {
@@ -319,7 +324,7 @@ export class TailwindFontClasses extends TailwindClassesBase {
       this.fontSize(),
       this.fontWeight(),
       this.textDecoration(),
-      this.textCase(),
+      this.textColor(),
     ]
       .filter((item) => item)
       .join(" ");

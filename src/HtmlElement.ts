@@ -30,7 +30,6 @@ export default class HtmlElement {
 
     this.classAttr = this.classes !== " " ? ` class="${this.classes}"` : "";
     const nameArray = this.node.name.split("/");
-    console.log(this.node.type);
     if (nameArray.length < 2) {
       if (this.node.type === "TEXT") {
         this.elementName = Element.Text;

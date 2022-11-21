@@ -6,10 +6,20 @@ import {
   TailwindFontClasses,
 } from "./TailwindClasses";
 
+function toPascalCase(text: string) {
+  return text.replace(/(^\w|-\w)/g, clearAndUpper);
+}
+
+function clearAndUpper(text: string) {
+  return text.replace(/-/, "").toUpperCase();
+}
+
 export default class HtmlElement {
   node: AcceptedNodes | TextNode;
   classes: string;
   classAttr: string;
+  elementName: Element | string;
+  componentName: string = "";
 
   constructor(componentNode: AcceptedNodes | TextNode) {
     this.node = componentNode;
@@ -19,23 +29,22 @@ export default class HtmlElement {
         : new TailwindClasses(this.node).generateClass();
 
     this.classAttr = this.classes !== " " ? ` class="${this.classes}"` : "";
-  }
-
-  nameArray() {
     const nameArray = this.node.name.split("/");
+    console.log(this.node.type);
     if (nameArray.length < 2) {
-      notify(PluginException.wrongElementName);
-      return;
+      if (this.node.type === "TEXT") {
+        this.elementName = Element.Text;
+      } else {
+        this.elementName = Element.Div;
+      }
+    } else {
+      this.componentName = nameArray[1];
+      if (this.node.type === "COMPONENT" || this.node.type === "INSTANCE") {
+        this.elementName = toPascalCase(this.componentName);
+      } else {
+        this.elementName = nameArray[0] as Element;
+      }
     }
-    return nameArray;
-  }
-
-  elementName() {
-    return this.nameArray()[0];
-  }
-
-  componentName() {
-    return this.nameArray()[1];
   }
 
   button() {
@@ -58,18 +67,27 @@ export default class HtmlElement {
     return `<p${this.classAttr}>$children</p>`;
   }
 
+  text() {
+    return `$children`;
+  }
+
   svg() {
     return null;
   }
 
   generateElement() {
-    return {
-      [Element.Button]: this.button(),
-      [Element.Form]: this.form(),
-      [Element.Div]: this.div(),
-      [Element.Span]: this.span(),
-      [Element.P]: this.p(),
-      [Element.Svg]: this.svg(),
-    }[this.elementName()];
+    //@ts-ignore
+    if (Object.values(Element).includes(this.elementName))
+      return {
+        [Element.Button]: this.button(),
+        [Element.Form]: this.form(),
+        [Element.Div]: this.div(),
+        [Element.Span]: this.span(),
+        [Element.P]: this.p(),
+        [Element.Svg]: this.svg(),
+        [Element.Text]: this.text(),
+      }[this.elementName];
+
+    return `<${this.elementName}/>`;
   }
 }

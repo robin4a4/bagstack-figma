@@ -13,5 +13,6 @@ export default class HtmlElement {
     div(): string;
     span(): string;
     p(): string;
-    generateElement(): string;
+    svg(): any;
+    generateElement(): any;
 }

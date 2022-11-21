@@ -3,7 +3,7 @@
     "emitDeclarationOnly": true,
     "declaration": true,    
     "target": "ES2016",
-    "lib": ["ES2016"],
+    "lib": ["esnext"],
     "declarationDir": "./src/types",
     "typeRoots": [
       "./node_modules/@types",

@@ -146,6 +146,8 @@ export class TailwindClasses extends TailwindClassesBase {
     if (typeof cornerRadius == "number") {
       if (cornerRadius === 4) return "rounded";
       if (cornerRadius === 8) return "rounded-md";
+      if (cornerRadius === 16) return "rounded-lg";
+      if (cornerRadius === 32) return "rounded-xl";
       if (cornerRadius > 100) return "rounded-full";
     } else {
       const topLeftRadius = this.node.topLeftRadius;
@@ -156,23 +158,35 @@ export class TailwindClasses extends TailwindClassesBase {
       if (topLeftRadius === topRightRadius) {
         if (topRightRadius === 4) cornerRadiusArray.push("rounded-t");
         if (topRightRadius === 8) cornerRadiusArray.push("rounded-t-md");
+        if (topRightRadius === 16) cornerRadiusArray.push("rounded-t-lg");
+        if (topRightRadius === 32) cornerRadiusArray.push("rounded-t-xl");
         if (topRightRadius > 100) cornerRadiusArray.push("rounded-t-full");
       } else {
         if (topRightRadius === 4) cornerRadiusArray.push("rounded-tr");
         if (topRightRadius === 8) cornerRadiusArray.push("rounded-tr-md");
+        if (topRightRadius === 16) cornerRadiusArray.push("rounded-tr-lg");
+        if (topRightRadius === 32) cornerRadiusArray.push("rounded-tr-xl");
         if (topLeftRadius === 4) cornerRadiusArray.push("rounded-tl");
         if (topLeftRadius === 8) cornerRadiusArray.push("rounded-tl-md");
+        if (topLeftRadius === 16) cornerRadiusArray.push("rounded-tl-lg");
+        if (topLeftRadius === 32) cornerRadiusArray.push("rounded-tl-xl");
         if (topLeftRadius > 100) cornerRadiusArray.push("rounded-tl-full");
       }
       if (bottomLeftRadius === bottomRightRadius) {
         if (bottomRightRadius === 4) cornerRadiusArray.push("rounded-b");
         if (bottomRightRadius === 8) cornerRadiusArray.push("rounded-b-md");
+        if (bottomRightRadius === 16) cornerRadiusArray.push("rounded-b-lg");
+        if (bottomRightRadius === 32) cornerRadiusArray.push("rounded-b-xl");
         if (bottomRightRadius > 100) cornerRadiusArray.push("rounded-b-full");
       } else {
         if (bottomRightRadius === 4) cornerRadiusArray.push("rounded-br");
         if (bottomRightRadius === 8) cornerRadiusArray.push("rounded-br-md");
+        if (bottomRightRadius === 16) cornerRadiusArray.push("rounded-br-lg");
+        if (bottomRightRadius === 32) cornerRadiusArray.push("rounded-br-xl");
         if (bottomLeftRadius === 4) cornerRadiusArray.push("rounded-bl");
         if (bottomLeftRadius === 8) cornerRadiusArray.push("rounded-bl-md");
+        if (bottomLeftRadius === 16) cornerRadiusArray.push("rounded-bl-lg");
+        if (bottomLeftRadius === 32) cornerRadiusArray.push("rounded-bl-xl");
         if (bottomLeftRadius > 100) cornerRadiusArray.push("rounded-bl-full");
       }
       return cornerRadiusArray.join(" ");
@@ -226,8 +240,9 @@ export class TailwindClasses extends TailwindClassesBase {
 
   borderColor() {
     if (
-      typeof this.node.fillStyleId === "string" &&
-      this.node.fillStyleId !== ""
+      (typeof this.node.fillStyleId === "string" &&
+        this.node.fillStyleId !== "") ||
+      !this.node.strokeStyleId
     )
       return;
     return `border-${this.color(this.node.strokeStyleId)}`;

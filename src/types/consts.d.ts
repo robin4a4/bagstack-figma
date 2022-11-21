@@ -15,5 +15,6 @@ export declare enum Element {
     Div = "div",
     Span = "span",
     P = "p",
-    Form = "form"
+    Form = "form",
+    Svg = "svg"
 }
